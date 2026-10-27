@@ -130,8 +130,13 @@ input[type=search], select { font: inherit; width: 100%; box-sizing: border-box;
 .sym { margin-top: 4px; }
 .mapbox { position: relative; min-width: 0; min-height: 0; }
 #map { position: absolute; inset: 0; background: var(--sea); }
-.legend { position: absolute; z-index: 500; right: max(12px, env(safe-area-inset-right, 0px)); bottom: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: .78rem; display: grid; gap: 5px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
-.legend div { display: flex; gap: 8px; align-items: center; }
+.mapbox { isolation: isolate; }
+.legend { position: absolute; z-index: 500; right: max(12px, env(safe-area-inset-right, 0px)); bottom: 22px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: .78rem; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.legend summary { cursor: pointer; font-weight: 600; font-size: .8rem; }
+.legend[open] summary { margin-bottom: 6px; }
+#legend { display: grid; gap: 5px; }
+#legend div { display: flex; gap: 8px; align-items: center; }
+.listbtn, .sheet-head, .ni, .ls { display: none; }
 .tbtn { position: absolute; z-index: 500; top: 12px; right: max(12px, env(safe-area-inset-right, 0px)); font: inherit; font-size: .8rem; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
 .foot { font-size: .74rem; color: var(--muted); padding: 10px 8px 0; }
 .foot a { color: var(--muted); }
@@ -191,14 +196,46 @@ input[type=search], select { font: inherit; width: 100%; box-sizing: border-box;
   .dirbar { grid-template-columns: 1fr 1fr; }
   .dirbar label:first-child { grid-column: 1 / -1; }
 }
+/* HP: menu di bawah layar, peta penuh layar, daftar gereja sebagai panel geser dari bawah */
 @media (max-width: 760px) {
-  nav { margin-left: 0; width: 100%; }
-  #v-peta { grid-template-columns: 1fr; grid-template-rows: 60vh auto; }
-  #v-peta .mapbox { order: -1; height: 60vh; }
-  #v-peta aside { border-right: 0; border-top: 1px solid var(--line); }
-  .list { overflow: visible; }
-  .legend { font-size: .72rem; padding: 8px 10px; }
+  body { padding-bottom: calc(var(--navh, 60px)); }
+  .top-in { padding-block: 8px; }
+  .brand small { display: none; }
+  .brand b { font-size: .98rem; }
+  .mark { width: 26px; height: 26px; }
+  nav { position: fixed; z-index: 1200; left: 0; right: 0; bottom: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; background: var(--header); border-top: 1px solid color-mix(in srgb, var(--header-ink) 12%, transparent);
+        padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); overflow: visible; }
+  nav a { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 4px 9px; border-radius: 0; font-size: .72rem; }
+  nav a[aria-current="page"] { background: none; color: var(--header-ink); box-shadow: inset 0 3px 0 var(--jabar); }
+  .ni { display: block; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .lw { display: none; } .ls { display: inline; }
+
+  input[type=search], select { font-size: 16px; }
+  .tog { padding: 6px 12px; font-size: .84rem; }
+  .wrap { padding-block: 20px 32px; gap: 22px; }
+  .tiles { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tile { padding: 12px; }
+  .counts b { font-size: 1.7rem; }
   .cards { grid-template-columns: 1fr; }
+  .kv { grid-template-columns: 72px 1fr; }
+
+  #v-peta { display: block; position: fixed; left: 0; right: 0; top: var(--hdrh, 50px); bottom: var(--navh, 60px); }
+  #v-peta .mapbox { position: absolute; inset: 0; }
+  .tbtn { top: 10px; font-size: .78rem; }
+  .legend { bottom: 70px; right: 10px; font-size: .74rem; max-width: 60vw; }
+  .listbtn { display: inline-flex; align-items: center; gap: 8px; position: absolute; z-index: 600; left: 50%; bottom: 14px; transform: translateX(-50%);
+             font: inherit; font-weight: 600; font-size: .9rem; background: var(--header); color: var(--header-ink); border: 0; border-radius: 999px; padding: 11px 18px; box-shadow: 0 4px 16px rgba(0,0,0,.25); cursor: pointer; white-space: nowrap; }
+  #v-peta aside { position: absolute; z-index: 700; left: 0; right: 0; bottom: 0; height: 78%; border: 0; border-radius: 16px 16px 0 0; box-shadow: 0 -8px 30px rgba(0,0,0,.25);
+                  transform: translateY(105%); transition: transform .25s ease; visibility: hidden; }
+  #v-peta.sheet-open aside { transform: none; visibility: visible; }
+  .sheet-head { display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 8px 16px 6px; position: relative; }
+  .sheet-head b { font-family: var(--font-display); font-size: 1rem; padding-top: 8px; }
+  .grip { display: block; position: absolute; left: 50%; top: 6px; width: 40px; height: 4px; margin-left: -20px; border-radius: 2px; background: var(--line); }
+  .sheet-close { font: inherit; font-weight: 600; background: var(--chip); color: var(--ink); border: 0; border-radius: 8px; padding: 6px 12px; margin-top: 6px; cursor: pointer; }
+  .ph { padding-top: 6px; }
+  .item { padding: 10px 8px; }
+  .leaflet-popup-content { min-width: 0; margin: 12px 14px; }
+  .leaflet-touch .leaflet-bar a { width: 36px; height: 36px; line-height: 36px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
 </style>
@@ -212,10 +249,10 @@ input[type=search], select { font: inherit; width: 100%; box-sizing: border-box;
       <span><b>Portal Mapping GKI di Sekitar Kajadu</b><small>Klasis Jakarta II dan sekitarnya</small></span>
     </a>
     <nav aria-label="Navigasi portal">
-      <a href="#beranda" data-view="beranda">Beranda</a>
-      <a href="#peta" data-view="peta">Peta</a>
-      <a href="#direktori" data-view="direktori">Direktori &amp; Jadwal</a>
-      <a href="#tentang" data-view="tentang">Tentang Data</a>
+      <a href="#beranda" data-view="beranda"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg><span>Beranda</span></a>
+      <a href="#peta" data-view="peta"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><span>Peta</span></a>
+      <a href="#direktori" data-view="direktori"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span class="lw">Direktori &amp; Jadwal</span><span class="ls">Jadwal</span></a>
+      <a href="#tentang" data-view="tentang"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><span class="lw">Tentang Data</span><span class="ls">Tentang</span></a>
     </nav>
   </div>
 </header>
@@ -260,7 +297,8 @@ input[type=search], select { font: inherit; width: 100%; box-sizing: border-box;
 
 <!-- PETA -->
 <section class="view" id="v-peta" hidden>
-  <aside>
+  <aside id="sheet" aria-label="Daftar dan filter gereja">
+    <div class="sheet-head"><span class="grip" aria-hidden="true"></span><b>Daftar &amp; filter</b><button type="button" class="sheet-close" id="sheetClose">Tutup</button></div>
     <div class="ph">
       <div class="stats" id="stats"></div>
       <input type="search" id="q" placeholder="Cari nama gereja, kota, atau jalan…" aria-label="Cari gereja di peta">
@@ -275,7 +313,8 @@ input[type=search], select { font: inherit; width: 100%; box-sizing: border-box;
   <div class="mapbox">
     <div id="map" role="region" aria-label="Peta lokasi gereja"></div>
     <button class="tbtn" id="reset" type="button">Tampilkan semua</button>
-    <div class="legend" id="legend"></div>
+    <details class="legend" id="legendBox"><summary>Legenda</summary><div id="legend"></div></details>
+    <button class="listbtn" id="sheetOpen" type="button" aria-controls="sheet"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span id="sheetCount">Daftar gereja</span></button>
   </div>
 </section>
 
@@ -528,7 +567,7 @@ function buildMarkers() {
     if (!d.ll) continue;
     const s = SIZE[d.st];
     const m = L.marker(d.ll, {icon: L.divIcon({className:"", html:symSVG(d, s), iconSize:[s,s], iconAnchor:[s/2,s/2], popupAnchor:[0,-s/2]}), title:d.n, zIndexOffset: d.st==="J" ? 300 : d.st==="B" ? 200 : 100, riseOnHover:true});
-    m.bindPopup(() => detailHTML(d, "popup"), {maxWidth:330});
+    m.bindPopup(() => detailHTML(d, "popup"), popOpts());
     m.on("popupopen", () => markActive(d.id));
     markers[d.id] = m;
   }
@@ -545,6 +584,7 @@ function renderMap() {
   for (const d of D) { const m = markers[d.id]; if (m) vis.includes(d) ? m.addTo(map) : m.remove(); }
   const c = k => vis.filter(d => d.st === k).length;
   document.getElementById("stats").innerHTML = `<span><b>${c("J")}</b>Jemaat</span><span><b>${c("B")}</b>Bakal Jemaat</span><span><b>${c("P")}</b>Pos Jemaat</span>`;
+  document.getElementById("sheetCount").textContent = `Daftar gereja (${vis.length})`;
   const groups = {};
   for (const d of vis) (groups[`${d.sw}|${d.kl}`] ??= []).push(d);
   let html = "";
@@ -569,13 +609,35 @@ const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 function go(id) {
   const d = byId[id];
   if (current !== "peta") { show("peta"); }
-  if (!d.ll) { markActive(id); L.popup({maxWidth:330}).setLatLng(map.getCenter()).setContent(detailHTML(d, "popup")).openOn(map); return; }
+  closeSheet();
+  if (!d.ll) { markActive(id); L.popup(popOpts()).setLatLng(map.getCenter()).setContent(detailHTML(d, "popup")).openOn(map); return; }
   if (!visible(d)) { state.sw.add(d.sw); state.st.add(d.st); state.wil.add(d.wil); state.q = ""; document.getElementById("q").value = ""; syncToggles(); renderMap(); }
   fitted = true;
   map.flyTo(d.ll, Math.max(map.getZoom(), 14), {duration: reduce() ? 0 : 0.6});
   setTimeout(() => markers[d.id].openPopup(), reduce() ? 0 : 650);
-  if (matchMedia("(max-width: 760px)").matches) document.querySelector(".mapbox").scrollIntoView({behavior: reduce() ? "auto" : "smooth"});
 }
+
+// ---------- HP: tinggi header/menu bawah, panel daftar geser, legenda terlipat
+const isMobile = () => matchMedia("(max-width: 760px)").matches;
+function popOpts() { return {maxWidth: Math.min(330, window.innerWidth - 56), autoPanPaddingTopLeft: [isMobile() ? 60 : 12, 56], autoPanPaddingBottomRight: [12, 70]}; }
+const vPeta = document.getElementById("v-peta");
+function openSheet() { vPeta.classList.add("sheet-open"); document.getElementById("sheetOpen").setAttribute("aria-expanded", "true"); }
+function closeSheet() { vPeta.classList.remove("sheet-open"); document.getElementById("sheetOpen").setAttribute("aria-expanded", "false"); }
+document.getElementById("sheetOpen").addEventListener("click", openSheet);
+document.getElementById("sheetClose").addEventListener("click", closeSheet);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+map.on("click", closeSheet);
+function measure() {
+  const r = document.documentElement.style;
+  r.setProperty("--hdrh", document.querySelector(".top").getBoundingClientRect().bottom + "px");
+  r.setProperty("--navh", (isMobile() ? document.querySelector("nav").offsetHeight : 0) + "px");
+  if (current === "peta") map.invalidateSize();
+}
+new ResizeObserver(measure).observe(document.querySelector(".top"));
+window.addEventListener("resize", measure);
+let wasMobile = null;
+function syncLegend() { const m = isMobile(); if (m !== wasMobile) { document.getElementById("legendBox").open = !m; wasMobile = m; } }
+window.addEventListener("resize", syncLegend);
 document.getElementById("list").addEventListener("click", e => { const b = e.target.closest(".item"); if (b) go(b.dataset.id); });
 
 // klik global: data-go (buka di peta) dan data-copy (salin tautan gereja)
@@ -693,6 +755,8 @@ function renderAbout() {
 function paint() { drawRegions(); buildMarkers(); legend(); renderMap(); renderDir(); renderHome(); }
 map.fitBounds([[-6.62,106.42],[-6.08,107.05]]);
 paint();
+syncLegend();
+measure();
 route();
 const repaint = () => { const open = map._popup && map._popup.isOpen && map._popup.isOpen(); paint(); if (!open) map.closePopup(); };
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", repaint);
